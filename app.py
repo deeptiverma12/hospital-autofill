@@ -1,3 +1,5 @@
+from pdf_generator import generate_filled_pdf
+import os
 import streamlit as st
 from groq import Groq
 import json
@@ -41,6 +43,14 @@ if st.button("Extract Info"):
             result = extract_patient_info(raw_input)
         
         st.success("Done!")
+        pdf_path = generate_filled_pdf(result)
+        with open(pdf_path, "rb") as f:
+           st.download_button(
+           label="Download Filled PDF",
+           data=f,
+           file_name="patient_form.pdf",
+           mime="application/pdf"
+    )
         
         col1, col2 = st.columns(2)
         
