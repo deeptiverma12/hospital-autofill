@@ -1,3 +1,4 @@
+from database import init_db, save_patient, search_patient, get_all_patients
 from pdf_generator import generate_filled_pdf
 import os
 import streamlit as st
@@ -5,6 +6,7 @@ from groq import Groq
 import json
 
 client = Groq()
+init_db()
 
 def extract_patient_info(raw_text):
     prompt = f"""
@@ -43,6 +45,8 @@ if st.button("Extract Info"):
             result = extract_patient_info(raw_input)
         
         st.success("Done!")
+        save_patient(result)
+        st.info("Patient saved to database.")
         pdf_path = generate_filled_pdf(result)
         with open(pdf_path, "rb") as f:
            st.download_button(
@@ -65,3 +69,11 @@ if st.button("Extract Info"):
             st.metric("Emergency Contact", result.get("emergency_contact") or "Not mentioned")
     else:
         st.warning("Please enter patient details first.")
+st.divider()
+st.subheader("All Patients")
+patients = get_all_patients()
+if patients:
+    for p in patients:
+        st.write(f"ID: {p[0]} | Name: {p[1]} | Age: {p[2]} | Symptoms: {p[3]}")
+else:
+    st.write("No patients yet.")
