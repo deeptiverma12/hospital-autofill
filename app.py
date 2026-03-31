@@ -3,7 +3,11 @@ from groq import Groq
 import json
 from pdf_generator import generate_filled_pdf
 from database import init_db, save_patient, get_all_patients
-from voice import transcribe_audio
+try:
+    from voice import transcribe_audio
+    VOICE_AVAILABLE = True
+except:
+    VOICE_AVAILABLE = False
 import os
 
  
@@ -89,11 +93,14 @@ with col_left:
     with btn_col1:
         extract_clicked = st.button("⚡ Extract Info", use_container_width=True)
     with btn_col2:
+     if VOICE_AVAILABLE:
         if st.button("🎤 Speak Instead", use_container_width=True):
             with st.spinner("Listening for 10 seconds..."):
                 spoken_text = transcribe_audio()
             st.session_state.patient_text = spoken_text
             st.rerun()
+     else:
+        st.button("🎤 Voice (Local Only)", disabled=True, use_container_width=True
 
 with col_right:
     st.markdown("### 📋 Extracted Information")
