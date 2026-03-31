@@ -100,7 +100,7 @@ with col_left:
             st.session_state.patient_text = spoken_text
             st.rerun()
      else:
-        st.button("🎤 Voice (Local Only)", disabled=True, use_container_width=True
+        st.button("🎤 Voice (Local Only)", disabled=True, use_container_width=True)
 
 with col_right:
     st.markdown("### 📋 Extracted Information")
